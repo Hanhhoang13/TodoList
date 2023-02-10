@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import TodoForm from './Component/TodoForm';
+import TodoList from './Component/Todolist';
 
 function App() {
+  const [todoList, setTodoList] = useState([]);
+
+  function handleTodoClick(todo) {
+    console.log(todo);
+    const index = todoList.findIndex(x => x.id == todo.id);
+    if (index < 0) return;
+
+    const newTodoList = [...todoList]
+    newTodoList.splice(index,1);
+    setTodoList(newTodoList);
+  }
+
+  function handleTodoFormSubmit(formValues) {
+    console.log('Form submit:',formValues);
+    const newTodo = {
+      id: todoList.length + 1,
+      ... formValues,
+    };
+    const newTodoList = [...todoList];
+    newTodoList.push(newTodo);
+    setTodoList(newTodoList);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+      <h1>To Do List</h1>
+     
+      <TodoForm onSubmit={handleTodoFormSubmit}/>
+      <TodoList className="List" todos={todoList} onTodoClick={handleTodoClick}/>
     </div>
   );
 }
